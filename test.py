@@ -20,9 +20,9 @@ class NadaTest(unittest.TestCase):
         cls.wait = WebDriverWait(cls.driver, 45)
 
         options = Options()
-        options.add_argument("--start-maximized")
+        options.add_argument('--start-maximized')
         options.add_argument('--incognito')
-        opt.add_argument("--disable-popup-blocking")
+        opt.add_argument('--disable-popup-blocking')
         cls.driver = webdriver.Chrome(options=options)
 
     @classmethod
