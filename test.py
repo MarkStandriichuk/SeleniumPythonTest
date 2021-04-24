@@ -1,6 +1,7 @@
 import unittest
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -17,6 +18,12 @@ class NadaTest(unittest.TestCase):
 
         cls.driver = webdriver.Chrome(ChromeDriverManager().install())
         cls.wait = WebDriverWait(cls.driver, 45)
+
+        options = Options()
+        options.add_argument("--start-maximized")
+        options.add_argument('--incognito')
+        opt.add_argument("--disable-popup-blocking")
+        cls.driver = webdriver.Chrome(options=options)
 
     @classmethod
     def tearDownClass(cls):
@@ -80,10 +87,7 @@ class NadaTest(unittest.TestCase):
 
         self.driver.close()
         self.driver.switch_to.window(self.driver.window_handles[0])
-        
-        message_table = self.driver.find_element_by_xpath('//table[@class="w-full flex flex-row flex-no-wrap bg-white dark:bg-gray-800 rounded-lg overflow-hidden sm:shadow-lg"]')
-        self.driver.execute_script("arguments[0].scrollIntoView();", message_table)
-        new_message = '//*[text()[contains(., "{}")]]'.format(self.LOGIN)
+        new_message = f'//*[text()[contains(., "{LOGIN}")]]'
         self.wait.until(EC.presence_of_element_located(
             (By.XPATH, new_message))).click()
 
@@ -93,7 +97,7 @@ class NadaTest(unittest.TestCase):
         
         for item in collected_links:
             self.driver.switch_to.frame(self.wait.until(EC.presence_of_element_located((By.XPATH, frame))))
-            link = self.driver.find_element_by_xpath('//*[contains(text(), "{}")]'.format(item))
+            link = self.driver.find_element_by_xpath(f'//*[contains(text(), "{item}")]')
             link.click()
             message_content.append(link.text)
             self.driver.switch_to.window(self.driver.window_handles[1])
